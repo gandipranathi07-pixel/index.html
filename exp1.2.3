@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Draw Circles with Undo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            padding: 30px;
+        }
+        .controls {
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #2f6df6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1e56d9;
+        }
+        .box {
+            width: 700px;
+            height: 420px;
+            border: 2px dashed #ccc;
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .circle {
+            width: 16px;
+            height: 16px;
+            background-color: #2f6df6;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .count {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="undoCircle()">Undo</button>
+    </div>
+    <div class="box" id="drawArea"></div>
+    <div class="count">
+        Circles drawn: <span id="count">0</span>
+    </div>
+    <script>
+        const drawArea = document.getElementById("drawArea");
+        const countText = document.getElementById("count");
+        let circles = [];
+        drawArea.addEventListener("click", function (event) {
+            const rect = drawArea.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const circle = document.createElement("div");
+            circle.className = "circle";
+            circle.style.left = (x - 8) + "px";
+            circle.style.top = (y - 8) + "px";
+            drawArea.appendChild(circle);
+            circles.push(circle);
+            updateCount();
+        });
+        function undoCircle() {
+            if (circles.length > 0) {
+                const lastCircle = circles.pop();
+                drawArea.removeChild(lastCircle);
+                updateCount();
+            }
+        }
+        function updateCount() {
+            countText.textContent = circles.length;
+        }
+    </script>
+</body>
+</html>
